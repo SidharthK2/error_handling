@@ -1,17 +1,18 @@
 use std::fs::File;
-use std::io::ErrorKind;
-
+use std::io::{self, Read};
 fn main() {
-    let file_res = File::open("hello.txt");
+    fn read_usr_from_file() -> Result<String, io::Error> {
+        let usr_file_res = File::open("hello.txt");
 
-    let file = match file_res {
-        Ok(file) => file,
-        Err(err) => match err.kind() {
-            ErrorKind::NotFound => match File::create("hello.txt") {
-                Ok(fc) => fc,
-                Err(err) => panic!("Error creating file: {:?}", err),
-            },
-            other_err => panic!("Error opening file: {}", other_err),
-        },
-    };
+        let mut usr_file = match usr_file_res {
+            Ok(file) => file,
+            Err(err) => return Err(err),
+        };
+
+        let mut usr = String::new();
+        match usr_file.read_to_string(&mut usr) {
+            Ok(_) => Ok(usr),
+            Err(err) => Err(err),
+        }
+    }
 }
