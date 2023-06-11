@@ -1,18 +1,17 @@
-use std::fs::File;
-use std::io::{self, Read};
-fn main() {
-    fn read_usr_from_file() -> Result<String, io::Error> {
-        let usr_file_res = File::open("hello.txt");
+pub struct Guess {
+    value: i32,
+}
 
-        let mut usr_file = match usr_file_res {
-            Ok(file) => file,
-            Err(err) => return Err(err),
-        };
-
-        let mut usr = String::new();
-        match usr_file.read_to_string(&mut usr) {
-            Ok(_) => Ok(usr),
-            Err(err) => Err(err),
+impl Guess {
+    pub fn new(value: i32) -> Guess {
+        if value < 1 || value > 100 {
+            panic!("Guess value must be between 1 and 100, got {}.", value);
         }
+
+        Guess { value }
+    }
+
+    pub fn value(&self) -> i32 {
+        self.value
     }
 }
